@@ -1,0 +1,53 @@
+<script type="text/discourse-plugin" version="0.8.7">
+    api.registerConnectorClass('user-profile-primary', 'custom-profile-link', {
+      setupComponent(args, component) {
+        component.set('customProfileLink', args.model.get('customProfileLink'));
+      }
+    });
+
+    api.registerConnectorClass('user-card-metadata', 'custom-profile-link', {
+      setupComponent(args, component) {
+        component.set('customProfileLink', args.user.get('customProfileLink'));
+      }
+    });
+
+    api.modifyClass('model:user', {
+      customProfileLink: function() {
+          const fieldName = settings.custom_profile_link_user_field;
+          
+          const siteUserFields = Discourse.Site.currentProp('user_fields');
+          if (Ember.isEmpty(siteUserFields)) return null;
+          
+          const field = siteUserFields.filterBy('name', fieldName)[0]
+          if (!field) return null;
+          
+          const fieldId = field.get('id');
+          const userFields = this.get('user_fields');
+          if (!userFields || !userFields[fieldId]) return null;
+          
+          return userFields[fieldId];
+      }.property('user_fields.@each.value')
+    });
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-profile-primary/custom-profile-link'>
+  {{#if customProfileLink}}
+    <div class="public-user-fields">
+      <div class="public-user-field">
+        <span class="user-field-value">
+          <a href="{{theme-setting 'custom_profile_link_prefix'}}{{{customProfileLink}}}">{{theme-setting 'custom_profile_link_label'}}</a>
+        </span>
+      </div>
+    </div>
+  {{/if}}
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-card-metadata/custom-profile-link'>
+  {{#if customProfileLink}}
+    <h3 class="user-card-public-field">
+      <span class="user-field-value">
+        <a href="{{theme-setting 'custom_profile_link_prefix'}}{{{customProfileLink}}}">{{theme-setting 'custom_profile_link_label'}}</a>
+      </span>
+    </h3>
+  {{/if}}
+</script>

@@ -1,0 +1,14 @@
+custom_profile_link_user_field:
+  type: string
+  default: External user ID
+  description: The name of your custom user field, e.g. External user ID
+
+custom_profile_link_label:
+  type: string
+  default: External profile
+  description: The label to add to the user's profile page, e.g. View external profile
+
+custom_profile_link_prefix:
+  type: string
+  default: https://yoursite.com/users/
+  description: Optional text to prepend before the user field value, e.g. https://yoursite.com/users/
